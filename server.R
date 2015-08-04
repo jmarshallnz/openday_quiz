@@ -36,20 +36,20 @@ shinyServer(function(input, output, session) {
   output$score <- renderPlot( {
     par(mar=c(4,4,3,0))
     hist(v$scores$score, main="Score", xlim=ext_range(v$scores$score, input$score, na.rm=TRUE), xaxs="i", col="grey60", xlab="")
-    abline(v=v$scores$score[length(v$scores$score)], lwd=2)
+    abline(v=v$scores$score[length(v$scores$score)], lwd=2, col="red")
   } )
 
   output$bonus <- renderPlot( {
     par(mar=c(4,4,3,0))
     hist(v$scores$bonus, xlim=ext_range(v$scores$bonus, input$bonus, na.rm=TRUE), main="Bonus", xaxs="i", col="pink", xlab="")
-    abline(v=v$scores$bonus[length(v$scores$bonus)], lwd=2)
+    abline(v=v$scores$bonus[length(v$scores$bonus)], lwd=2, col="red")
   } )
 
   output$total <- renderPlot( {
     par(mar=c(4,4,3,0))
     xlim <- ext_range(v$scores$bonus + v$scores$score, input$bonus+input$score, na.rm=TRUE)
     hist(v$scores$bonus + v$scores$score, xlim=xlim, main="Total score", xaxs="i", col="lightblue", xlab="")
-    abline(v=v$scores$bonus[length(v$scores$bonus)]+v$scores$score[length(v$scores$score)], lwd=2)
+    abline(v=v$scores$bonus[length(v$scores$bonus)]+v$scores$score[length(v$scores$score)], lwd=2, col="red")
   } )
 
   output$score_bonus <- renderPlot( {

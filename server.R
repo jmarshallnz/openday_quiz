@@ -6,6 +6,11 @@ if (!create_database()) {
   cat("Unable to create database\n", file=stderr());
 }
 
+ext_range <- function(...) {
+  r <- range(...)
+  (r - mean(r))*1.05 + mean(r)
+}
+
 shinyServer(function(input, output, session) {
 
   v <- reactiveValues(scores = read_scores())
@@ -30,19 +35,19 @@ shinyServer(function(input, output, session) {
   # plot on the left shows actual data
   output$score <- renderPlot( {
     par(mar=c(4,4,3,0))
-    hist(v$scores$score, main="Score", xlim=range(v$scores$score, input$score, na.rm=TRUE), xaxs="i", col="grey60", xlab="")
+    hist(v$scores$score, main="Score", xlim=ext_range(v$scores$score, input$score, na.rm=TRUE), xaxs="i", col="grey60", xlab="")
     abline(v=input$score, lwd=2)
   } )
 
   output$bonus <- renderPlot( {
     par(mar=c(4,4,3,0))
-    hist(v$scores$bonus, xlim=range(v$scores$bonus, input$bonus, na.rm=TRUE), main="Bonus", xaxs="i", col="pink", xlab="")
+    hist(v$scores$bonus, xlim=ext_range(v$scores$bonus, input$bonus, na.rm=TRUE), main="Bonus", xaxs="i", col="pink", xlab="")
     abline(v=input$bonus, lwd=2)
   } )
 
   output$total <- renderPlot( {
     par(mar=c(4,4,3,0))
-    xlim <- range(v$scores$bonus + v$scores$score, input$bonus+input$score, na.rm=TRUE)
+    xlim <- ext_range(v$scores$bonus + v$scores$score, input$bonus+input$score, na.rm=TRUE)
     hist(v$scores$bonus + v$scores$score, xlim=xlim, main="Total score", xaxs="i", col="lightblue", xlab="")
     abline(v=input$bonus+input$score, lwd=2)
   } )

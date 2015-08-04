@@ -23,7 +23,7 @@ create_database <- function() {
     conn <- dbConnect(RMySQL::MySQL(), user='opendayquiz', password='opendayquiz', host='localhost', dbname='opendayquiz')
 
     # create score table if not already there
-    fields <- "score_id INT PRIMARY KEY AUTO_INCREMENT, total INT, bonus INT"
+    fields <- "score_id INT PRIMARY KEY AUTO_INCREMENT, score INT, bonus INT"
 
     res <- dbSendQuery(conn, paste("CREATE TABLE IF NOT EXISTS scores (", fields, ");"))
     dbClearResult(res)
@@ -37,14 +37,14 @@ create_database <- function() {
 }
 
 # write sample to the database if possible
-write_sample <- function(total, bonus) {
+write_sample <- function(score, bonus) {
   success <- FALSE
 
   try({
     conn <- dbConnect(RMySQL::MySQL(), user='opendayquiz', password='opendayquiz', host='localhost', dbname='opendayquiz')
 
-    cols <- "total,bonus"
-    vals <- paste(c(total, bonus), collapse=",")
+    cols <- "score,bonus"
+    vals <- paste(c(score, bonus), collapse=",")
     sql  <- paste("INSERT INTO scores(",cols,") VALUES(",vals,");")
 
     res <- dbSendQuery(conn, sql)

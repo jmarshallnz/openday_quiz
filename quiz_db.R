@@ -5,11 +5,7 @@ read_scores <- function() {
   values <- NULL
 
   try({
-    conn <- dbConnect(RMySQL::MySQL(), user='opendayquiz', password='opendayquiz', host='localhost', dbname='opendayquiz')
-
-    values <- dbGetQuery(conn, "SELECT * FROM scores")[,-1]
-
-    dbDisconnect(conn)
+    values = read.csv("opendayquiz.csv")
   }, silent=TRUE)
 
   values
@@ -18,18 +14,14 @@ read_scores <- function() {
 # create the database if possible
 create_database <- function() {
   success <- FALSE
-
+  
   try({
-    conn <- dbConnect(RMySQL::MySQL(), user='opendayquiz', password='opendayquiz', host='localhost', dbname='opendayquiz')
-
-    # create score table if not already there
-    fields <- "score_id INT PRIMARY KEY AUTO_INCREMENT, score INT, bonus INT"
-
-    res <- dbSendQuery(conn, paste("CREATE TABLE IF NOT EXISTS scores (", fields, ");"))
-    dbClearResult(res)
-
-    dbDisconnect(conn)
-
+    # check if the file exists
+    if (!file.exists("opendayquiz.csv")) {
+      # otherwise, create it
+      scores <- data.frame(score=NA, bonus=NA) 
+      write.csv(scores, "opendayquiz.csv", row.names=FALSE)
+    }
     success <- TRUE
   }, silent=TRUE)
 
@@ -40,17 +32,13 @@ create_database <- function() {
 write_sample <- function(score, bonus) {
   success <- FALSE
 
+  # read in the csv
   try({
-    conn <- dbConnect(RMySQL::MySQL(), user='opendayquiz', password='opendayquiz', host='localhost', dbname='opendayquiz')
+    scores <- read.csv("opendayquiz.csv")
+    scores <- rbind(scores, c(score, bonus))
 
-    cols <- "score,bonus"
-    vals <- paste(c(score, bonus), collapse=",")
-    sql  <- paste("INSERT INTO scores(",cols,") VALUES(",vals,");")
+    write.csv(scores, "opendayquiz.csv", row.names=FALSE)
 
-    res <- dbSendQuery(conn, sql)
-    dbClearResult(res)
-
-    dbDisconnect(conn)
     success <- TRUE
   }, silent=TRUE)
 

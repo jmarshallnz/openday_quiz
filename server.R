@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
 
   output$score_bonus <- renderPlot( {
     par(mar=c(4,4,3,0))
-    plot(score ~ bonus, data=rbind(v$scores, c(input$score, input$bonus)), pch=19, col="grey50", xlab="Bonus", ylab="Score", main="Score versus Bonus", bty="n")
+    plot(score ~ bonus, data=v$scores, pch=19, col="grey50", xlab="Bonus", ylab="Score", main="Score versus Bonus", bty="n")
     points(v$scores$bonus[length(v$scores$bonus)], v$scores$score[length(v$scores$score)], col="red", pch=19)
   } )
 

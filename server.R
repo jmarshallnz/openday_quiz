@@ -57,7 +57,8 @@ shinyServer(function(input, output, session) {
 
   output$score_bonus <- renderPlot( {
     par(mar=c(4,4,3,0))
-    plot(score ~ bonus, data=v$scores, pch=19, col="grey50", xlab="Bonus", ylab="Score", main="Score versus Bonus", bty="n")
+    cols <- c("grey50", "grey70")
+    plot(score ~ bonus, data=v$scores, pch=19, col=cols[as.numeric(as.factor(year))], xlab="Bonus", ylab="Score", main="Score versus Bonus", bty="n")
     points(v$scores$bonus[length(v$scores$bonus)], v$scores$score[length(v$scores$score)], col="red", pch=19)
   } )
 

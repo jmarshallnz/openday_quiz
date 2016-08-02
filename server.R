@@ -1,6 +1,9 @@
 library(shiny)
+library(lubridate)
 
 source("quiz_db.R")
+
+quiz_year = lubridate::year(Sys.Date())
 
 if (!create_database()) {
   cat("Unable to create database\n", file=stderr());
@@ -21,8 +24,8 @@ shinyServer(function(input, output, session) {
 
     if (input$bonus > 0) {
       # write the results to the database
-      v$scores <- rbind(v$scores, c(input$score, input$bonus))
-      if (!write_sample(input$score, input$bonus)) {
+      v$scores <- rbind(v$scores, c(input$score, input$bonus, quiz_year))
+      if (!write_sample(input$score, input$bonus, quiz_year)) {
         cat("Unable to write sample to database\n", file=stderr())
       }
     }
